@@ -1,0 +1,145 @@
+"""
+Loops
+Student Project
+Project Title:
+"""
+#Library
+import tsapp
+import random
+#Intro
+print("Use the arrow keys to try and make it to the other side as fast as you can.")
+#Sprites
+window = tsapp.GraphicsWindow()
+background = tsapp.Sprite("SpaceAsteroidScrolling.jpg", 0, 0)
+player = tsapp.Sprite("Breeze.png", 10, 200)
+object1 = tsapp.Sprite("Barrel.png", 150, 200)
+object2 = tsapp.Sprite("OrbPeach.png", 450, 240)
+object3 = tsapp.Sprite("RPSRockLarge.png", 670, 240)
+topbar = tsapp.Sprite("TopBarDark.png", 0, -210)
+bottombar = tsapp.Sprite("TopBarDark.png", 0, 570)
+#Text
+gameover = "Game Over"
+winner = "YOU WON"
+caption1 = tsapp.TextLabel("Archivo-BoldItalic.ttf", 200, 220, 250, 260, gameover, tsapp.RED)
+caption2 = tsapp.TextLabel("Peralta-Regular.ttf", 200, 220, 250, 260, winner, tsapp.BLUE)
+#Seconds
+seconds = tsapp.get_program_duration() / 10
+#AddObjects
+window.add_object(background)
+window.add_object(player)
+window.add_object(object1)
+window.add_object(object2)
+window.add_object(object3)
+window.add_object(topbar)
+window.add_object(bottombar)
+
+#SpriteScale
+object1.scale = .4
+object2.scale = .4
+object3.scale = .4
+player.scale = .5
+
+#Speeds
+object1.y_speed = 400
+object2.y_speed = -500
+object3.y_speed = 600
+
+
+#coins
+for i in range(3):
+    coin = tsapp.Sprite("Coin.png", 850 + (i * 700), random.randint(100, 400))
+    window.add_object(coin)
+    coin.scale = .4
+    
+    
+#Main Loop
+while window.is_running:
+    #Player Movement
+    if tsapp.is_key_down(tsapp.K_RIGHT):
+        player.x_speed = 300
+        player.image = "BreezeRunSheet.png"
+    elif tsapp.is_key_down(tsapp.K_LEFT):
+        player.x_speed = -300
+        player.image = "Breeze.png"
+    elif tsapp.is_key_down(tsapp.K_UP):
+        player.y_speed = -300
+    elif tsapp.is_key_down(tsapp.K_DOWN):
+        player.y_speed = 300
+    else:
+        player.x_speed = 0
+        player.y_speed = 0
+        player.image = "Breeze.png"
+    
+    #Obstacles
+    if object1.y > 450:
+        object1.y_speed = -400
+    if object1.y < -10:
+        object1.y_speed = 400
+    if object2.y > 500:
+        object2.y_speed = -500
+    if object2.y < -10:
+        object2.y_speed = 500
+    if object3.y > 500:
+        object3.y_speed = -600
+    if object3.y < -10:
+        object3.y_speed = 600
+    
+
+    #Collisions
+    if not player.is_colliding_rect(object1):
+        player_last_x = player.center_x
+        player_last_y = player.center_y
+    if player.is_colliding_rect(object1):
+        player.center_x = player_last_x
+        player.center_y = player_last_y
+        window.add_object(caption1)
+        object1.y_speed = 0
+        object2.y_speed = 0
+        object3.y_speed = 0
+        player.x_speed = 0
+        player.y_speed = 0
+    if not player.is_colliding_rect(object2):
+        player_last_x = player.center_x
+        player_last_y = player.center_y
+    if player.is_colliding_rect(object2):
+        player.center_x = player_last_x
+        player.center_y = player_last_y
+        window.add_object(caption1)
+        object1.y_speed = 0
+        object2.y_speed = 0
+        object3.y_speed = 0
+        player.x_speed = 0
+        player.y_speed = 0
+    if not player.is_colliding_rect(object3):
+        player_last_x = player.center_x
+        player_last_y = player.center_y
+    if player.is_colliding_rect(object3):
+        player.center_x = player_last_x
+        player.center_y = player_last_y
+        window.add_object(caption1)
+        object1.y_speed = 0
+        object2.y_speed = 0
+        object3.y_speed = 0
+        player.x_speed = 0
+        player.y_speed = 0
+    if player.is_colliding_rect(topbar):
+        player.y_speed = 0
+        player.y_speed = 150
+    if player.is_colliding_rect(bottombar):
+        player.y_speed = 0
+        player.y_speed = -150    
+    if player.x > 815:
+        window.add_object(caption2)
+        object1.y_speed = 0
+        object2.y_speed = 0
+        object3.y_speed = 0
+        player.x_speed = 0
+        player.y_speed = 0
+        print("It took you " + str(seconds) + " seconds!")
+        print("Can you do better?")
+    
+
+#FinalFrame
+    window.finish_frame()
+    
+    
